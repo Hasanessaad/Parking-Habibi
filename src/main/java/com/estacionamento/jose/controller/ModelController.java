@@ -1,11 +1,12 @@
 package com.estacionamento.jose.controller;
 
-import com.estacionamento.jose.entity.Marca;
-import com.estacionamento.jose.entity.Modelo;
-import com.estacionamento.jose.repository.ModeloRepository;
+import com.estacionamento.jose.entity.Brand;
+import com.estacionamento.jose.entity.Model;
+import com.estacionamento.jose.repository.ModelRepository;
+import com.estacionamento.jose.repository.BrandRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,15 +16,18 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/modelo")
-public class ModeloController {
+public class ModelController {
     @Autowired
-    private ModeloRepository modeloRepository;
+    private ModelRepository modelRepository;
+
+    @Autowired
+    private BrandRepository brandRepository;
 
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll(){
 
         try{
-            List<?> m_marca = modeloRepository.findAll();
+            List<?> m_marca = modelRepository.findAll();
             return new ResponseEntity<>(m_marca, HttpStatus.OK);
         }catch (Exception e){
 
@@ -32,9 +36,10 @@ public class ModeloController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> cadastrar(@RequestBody final Modelo modelo){
+    public ResponseEntity<?> cadastrar(@RequestBody final Model model){
         try {
-            this.modeloRepository.save(modelo);
+            this.modelRepository.save(model);
+//            this.modelRepository.save(brandId);
             return ResponseEntity.ok("Registrado cadastrado com Sucesso");
         }
         catch (DataIntegrityViolationException e) {
