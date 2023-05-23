@@ -44,8 +44,8 @@ public class BrandController {
     }
 
     @GetMapping("/ativo")
-    public ResponseEntity<?> findByAtivo(@Param("ativo") final boolean ativo){
-        return ResponseEntity.ok(this.brandRepository.findByAtivo(ativo));
+    public ResponseEntity<?> findByActive(@Param("ativo") final boolean active){
+        return ResponseEntity.ok(this.brandRepository.findByActive(active));
     }
 
     @PostMapping("/add")

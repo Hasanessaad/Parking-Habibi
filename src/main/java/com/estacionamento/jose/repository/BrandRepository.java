@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
-    @Query("FROM Brand WHERE ativo = true")
-    List<Brand> findByAtivo(@Param("ativo")final boolean ativo);
+    @Query("FROM Brand WHERE active = true")
+    List<Brand> findByActive(@Param("active")final boolean active);
 
     @Query("FROM Brand WHERE name = :name AND id = :id")
     List<Brand> findByNomePut(@Param("name") final String name, @Param("id")final Long id);

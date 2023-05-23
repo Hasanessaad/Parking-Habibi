@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
 @MappedSuperclass
 @Table(name = "abstractEntity",schema = "public")
 public class AbstractEntity {
@@ -25,14 +26,14 @@ public class AbstractEntity {
     private LocalDateTime atualizacao;
 
     @Getter @Setter
-    @Column(name = "ativo", nullable = false)
-    private boolean ativo;
+    @Column(name = "active", nullable = false)
+    private boolean active;
 
     @PrePersist
     private void prePersist(){
         this.cadastro = LocalDateTime.now();
         this.atualizacao = LocalDateTime.now();
-        this.ativo = true;
+        this.active = true;
     }
 
 

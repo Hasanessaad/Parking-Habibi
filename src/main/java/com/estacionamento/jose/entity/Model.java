@@ -9,12 +9,12 @@ import lombok.Setter;
 public class Model extends AbstractEntity{
 
     @Getter @Setter
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Getter @Setter
-    @ManyToOne
-    @JoinColumn(name = "brand")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "brandId")
     private Brand brandId;
 
 }

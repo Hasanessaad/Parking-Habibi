@@ -1,12 +1,11 @@
 package com.estacionamento.jose.controller;
 
-import com.estacionamento.jose.entity.Brand;
 import com.estacionamento.jose.entity.Model;
 import com.estacionamento.jose.repository.ModelRepository;
-import com.estacionamento.jose.repository.BrandRepository;
-
+import com.estacionamento.jose.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,38 +14,79 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/modelo")
+@RequestMapping("/api/model")
 public class ModelController {
-    @Autowired
-    private ModelRepository modelRepository;
 
-    @Autowired
-    private BrandRepository brandRepository;
+        @Autowired
+        private ModelRepository modelRepository;
 
-    @GetMapping("/findAll")
-    public ResponseEntity<?> findAll(){
+        @Autowired
+        private ModelService modelService;
 
-        try{
-            List<?> m_marca = modelRepository.findAll();
-            return new ResponseEntity<>(m_marca, HttpStatus.OK);
-        }catch (Exception e){
+        @GetMapping("/id")
+        public ResponseEntity<?> findById(@RequestParam("id") final Long id){
+            Model cur_model = this.modelRepository.findById(id).orElse(null);
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return cur_model == null
+                    ? ResponseEntity.badRequest().body("Nenhum valor encontrado")
+                    : ResponseEntity.ok(cur_model);
+        }
+        //
+        @GetMapping("/findAll")
+        public ResponseEntity<?> findAll(){
+
+            try{
+                List<?> m_model = modelRepository.findAll();
+                return new ResponseEntity<>(m_model, HttpStatus.OK);
+            }catch (Exception e){
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        @GetMapping("/ativo")
+        public ResponseEntity<?> findByActiveModel(@Param("active") final boolean active){
+            return ResponseEntity.ok(this.modelRepository.findByActiveModel(active));
+        }
+
+        @PostMapping("/add")
+        public ResponseEntity<?> cadastrar(@RequestBody final Model model){
+            try {
+                this.modelRepository.save(model);
+                return ResponseEntity.ok("Registrado cadastrado com Sucesso");
+            }
+            catch (DataIntegrityViolationException e) {
+                return ResponseEntity.internalServerError().body("Error: " + e.getCause().getCause().getMessage());
+            }
+            catch (RuntimeException e){
+                return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            }
+        }
+
+        @PutMapping
+        public ResponseEntity<?> edited(@RequestParam("id") final Long id,@RequestBody final Model model){
+
+            try{
+                this.modelService.edited(model, id);
+                return ResponseEntity.ok("Registro atualizacao com sucesso");
+            }
+            catch (DataIntegrityViolationException e){
+                return ResponseEntity.internalServerError().body("Error: " + e.getCause().getCause().getMessage());
+            }
+            catch (RuntimeException e){
+                return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            }
+        }
+
+
+        @DeleteMapping
+        public ResponseEntity<?> deletar (@RequestParam ("id") final Long id){
+
+            final Model bb = this.modelRepository.findById(id).orElse(null);
+
+            this.modelService.delete(bb);
+
+            return ResponseEntity.ok("Marca deletada com sucesso");
         }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> cadastrar(@RequestBody final Model model){
-        try {
-            this.modelRepository.save(model);
-//            this.modelRepository.save(brandId);
-            return ResponseEntity.ok("Registrado cadastrado com Sucesso");
-        }
-        catch (DataIntegrityViolationException e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getCause().getCause().getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
-    }
-}

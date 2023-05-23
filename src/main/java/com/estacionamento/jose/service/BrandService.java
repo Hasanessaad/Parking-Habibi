@@ -1,4 +1,3 @@
-
 package com.estacionamento.jose.service;
 
 import com.estacionamento.jose.entity.Brand;
@@ -17,7 +16,6 @@ public class BrandService {
 
     @Autowired
     private BrandRepository brandRepository;
-
 
     @Transactional(rollbackFor = Exception.class)
     public void cadastrar(@RequestParam("name") final String name,@RequestBody final Brand brand){
@@ -43,16 +41,15 @@ public class BrandService {
 
 
     @Transactional(rollbackFor = Exception.class)
-
     public void delete(final Brand brand){
         final Brand brandBanco = this.brandRepository.findById(brand.getId()).orElse(null);
 
-        List<Brand> brandAtivo = this.brandRepository.findByAtivo(brand.isAtivo());
+        List<Brand> brandAtivo = this.brandRepository.findByActive(brand.isActive());
 
         if(brandAtivo.isEmpty()){
             this.brandRepository.delete(brandBanco);
         } else{
-            brandBanco.setAtivo(Boolean.FALSE);
+            brandBanco.setActive(Boolean.FALSE);
             this.brandRepository.save(brand);
         }
     }
