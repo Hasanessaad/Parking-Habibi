@@ -24,6 +24,8 @@ public class ConductorService {
 
         Assert.isTrue(conductor.getName() != null, "O nome está faltando");
 
+        Assert.isTrue(!conductor.getName().matches("\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)"), "O nome deve conter apelido, nao deve ter numeros");
+
         this.conductorRepository.save(conductor);
     }
 
@@ -42,19 +44,19 @@ public class ConductorService {
     }
 
 
-//    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
 
-//    public void delete(final Conductor conductor){
-//        final Conductor conductorBanco = this.conductorRepository.findById(conductor.getId()).orElse(null);
-//
-//        List<Conductor> conductorAtivo = this.conductorRepository.findByAtivo(conductor.isAtivo());
-//
-//        if(conductorAtivo.isEmpty()){
-//            this.conductorRepository.delete(conductorBanco);
-//        } else{
-//            conductorBanco.setAtivo(Boolean.FALSE);
-//            this.conductorRepository.save(conductor);
-//        }
-//    }
+    public void delete(final Conductor conductor){
+        final Conductor conductorBanco = this.conductorRepository.findById(conductor.getId()).orElse(null);
+
+        List<Conductor> conductorAtivo = this.conductorRepository.findByAtivo(conductor.isActive());
+
+        if(conductorAtivo.isEmpty()){
+            this.conductorRepository.delete(conductorBanco);
+        } else{
+            conductorBanco.setActive(Boolean.FALSE);
+            this.conductorRepository.save(conductor);
+        }
+    }
 
 }

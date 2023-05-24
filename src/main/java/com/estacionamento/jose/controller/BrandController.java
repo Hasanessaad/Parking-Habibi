@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/marca")
+@RequestMapping("/api/brand")
 public class BrandController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class BrandController {
                 ? ResponseEntity.badRequest().body("Nenhum valor encontrado")
                 : ResponseEntity.ok(cur_brand);
     }
-//
+
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll(){
 
@@ -84,6 +84,7 @@ public class BrandController {
         final Brand bb = this.brandRepository.findById(id).orElse(null);
 
         this.brandService.delete(bb);
+
 
         return ResponseEntity.ok("Marca deletada com sucesso");
     }

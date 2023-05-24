@@ -64,7 +64,6 @@ public class ConductorController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> edit(@RequestParam("id") final Long id,@RequestBody final Conductor conductor){
-
         try{
             this.conductorService.edit(conductor, id);
             return ResponseEntity.ok("Registro atualizacao com sucesso");
@@ -76,15 +75,15 @@ public class ConductorController {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
-//
-//
-//    @DeleteMapping
-//    public ResponseEntity<?> deletar (@RequestParam ("id") final Long id){
-//
-//        final Brand bb = this.brandRepository.findById(id).orElse(null);
-//
-//        this.brandService.delete(bb);
-//
-//        return ResponseEntity.ok("Marca deletada com sucesso");
-//    }
+
+
+    @DeleteMapping
+    public ResponseEntity<?> deletar(@RequestParam ("id") final Long id){
+
+        final Conductor cc = this.conductorRepository.findById(id).orElse(null);
+
+        this.conductorService.delete(cc);
+
+        return ResponseEntity.ok("Marca deletada com sucesso");
+    }
 }
